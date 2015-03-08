@@ -27,7 +27,6 @@ url<-"https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_cons
 ##         a copy of the hpc data.frame saved as hpc_dataset file in the ./data subdirectory
 ##         plot2.png 480x480 pix with white bg and black color lineplot representing
 ##         Global Active Power (kilowatt) vs Time
-myPNGfile<-"plot2.png"
 ##
 ## note: typical RStudio console output are commented along with #>
 ##       RStudio Version 0.98.1091 - © 2009-2014 RStudio, Inc.
@@ -82,7 +81,7 @@ print(list.files("./data"))    # to confirm file is copied to the /data director
 #> [3] "hpc_dataset"       
 dateDownloaded_csv<-date()  # to confirm file datestamp and enable back tracking
 print(dateDownloaded_csv)
-#> [1] "Wed Mar 04 13:37:20 2015"
+#> [1] "Sat Mar 07 19:36:51 2015"
 ##
 ## now we extract the dataset needed for analysis into a data.frame: all parameters are essential
 ##
@@ -193,7 +192,7 @@ save(list="hpc",file="./data/hpc_dataset")
 ##
 print(file.info(file="./data/hpc_dataset"))
 #>                     size isdir mode               mtime               ctime               atime exe
-#> ./data/hpc_dataset 27413 FALSE  666 2015-03-04 13:37:56 2015-03-04 10:30:41 2015-03-04 10:30:41  no
+#> ./data/hpc_dataset 27413 FALSE  666 2015-03-07 19:37:22 2015-03-04 10:30:41 2015-03-04 10:30:41  no
 ##
 ## This concludes the ReadData portion: hpc data subset is ready for plots
 ##
@@ -206,41 +205,25 @@ if(!(nrow(hpc)==2880 & length(hpc)==8)){
                 stop("Data is needed before plots...")
         } 
 }
-## Save device parameters before plots so we can restore device on exit
 ##
-oldpar<-par()
+## Begin plot
 ##
-## set for single plot, standard margins and outer margins
-par(mfrow=c(1,1),mar=c(5,4,4,2)+0.1,oma=c(0,0,0,0))
-##
+myPNGfile<-"plot2.png"
+png(filename=myPNGfile,width=480,height=480) ## open png device for plot2.png 480x480 pix
+
 with(hpc, plot(Time,Global_active_power,
                type="l",
                xlab="",
-               ylab="Global Active Power (kilowatts)"))
-##
-## copy output in PNG format as specified
-##
-dev.copy(png,file=myPNGfile,
-         width=480,
-         height=480,
-         units="px",
-         pointsize=9,
-         bg="white",
-         res=NA)
-##
-## Close the PNG device before restoring
-##
-dev.off() 
-##
-## reset the device parameters we had tweaked to their initial state
-##
-par(mfrow=oldpar$mfrow,mar=oldpar$mar,oma=oldpar$oma)
+               ylab="Global Active Power (kilowatts)")
+     )
+
+dev.off() # close png device
 ##
 ## verify PNG file exists and indicate its file.info()
 print(file.exists(myPNGfile))
 #> [1] TRUE
 print(file.info(myPNGfile))
 #>           size isdir mode               mtime               ctime               atime exe
-#> plot2.png 6330 FALSE  666 2015-03-04 13:37:56 2015-03-03 21:30:51 2015-03-03 21:30:51  no
+#> plot2.png 4504 FALSE  666 2015-03-07 19:37:23 2015-03-03 21:30:51 2015-03-03 21:30:51  no
 ##
 ## This concludes plot#2

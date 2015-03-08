@@ -31,7 +31,6 @@ url<-"https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_cons
 ##              plot3, Energy sub metering vs Time, as described in plot3.R
 ##              plot4, Global_reactive_power vs Time, black color lineplot, x-axis annotated datetime
 ##         
-myPNGfile<-"plot4.png"
 ##
 ## note: typical RStudio console output are commented along with #>
 ##       RStudio Version 0.98.1091 - © 2009-2014 RStudio, Inc.
@@ -86,7 +85,7 @@ print(list.files("./data"))    # to confirm file is copied to the /data director
 #> [3] "hpc_dataset"         
 dateDownloaded_csv<-date()  # to confirm file datestamp and enable back tracking
 print(dateDownloaded_csv)
-#> [1] "Wed Mar 04 14:56:41 2015"
+#> [1] "Sat Mar 07 19:41:04 2015"
 ##
 ## now we extract the dataset needed for analysis into a data.frame: all parameters are essential
 ##
@@ -197,7 +196,7 @@ save(list="hpc",file="./data/hpc_dataset")
 ##
 print(file.info(file="./data/hpc_dataset"))
 #>                     size isdir mode               mtime               ctime               atime exe
-#> ./data/hpc_dataset 27413 FALSE  666 2015-03-04 14:57:17 2015-03-04 10:30:41 2015-03-04 10:30:41  no
+#> ./data/hpc_dataset 27413 FALSE  666 2015-03-07 19:41:33 2015-03-04 10:30:41 2015-03-04 10:30:41  no
 ##
 ## This concludes the ReadData portion: hpc data subset is ready for plots
 ##
@@ -210,12 +209,17 @@ if(!(nrow(hpc)==2880 & length(hpc)==8)){
                 stop("Data is needed before plots...")
         } 
 }
+##
+## Begin plot
+##
+myPNGfile<-"plot4.png"
+png(filename=myPNGfile,width=480,height=480) ## open png device for plot2.png 480x480 pix
 ## Save device parameters before plots so we can restore device on exit
 ##
 oldpar<-par()
 ##
-## Setup for 2x2 frames, reset margins and outermargins
-par(mfrow=c(2,2),mar=c(4,4,4,4),oma=c(2,2,2,2),ps=8)
+## Setup for 2x2 frames
+par(mfrow=c(2,2))
 ##
 ## Plot#1 - Global Active Power vs time over 2 day period
 ##
@@ -246,48 +250,32 @@ with(hpc,{
         lines(Time,Sub_metering_3,
               col="blue",
               type="l");
-        legend(x=hpc$Time[1000],y=40,
+        legend("topright",
                lty=1,
+               bty="n",    # suppress the legend border
                seg.len=2,
-               bty="n",
-               inset=-.1,
-               x.intersp=1,
-               y.intersp=.3,
                col=c("black","red","blue"),
-               legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3")
-        )
-}
-)
+               legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+        }
+    )
 ##
 ## Plot#4 - Global_reactive_power vs Time (labeled x-axis as datetime) 
 with(hpc, plot(Time,Global_reactive_power,
                ylim=c(0,0.5),
                xlab="datetime",
                col="black",type="l"))
-##
-## copy output in PNG format as specified
-##
-dev.copy(png,file=myPNGfile,
-         width=480,
-         height=480,
-         units="px",
-         pointsize=9,
-         bg="white",
-         res=NA)
-##
-## Close the PNG device before restoring
-##
-dev.off() 
+
+dev.off() # Close the PNG device before restoring
 ##
 ## reset the device parameters we had tweaked to their initial state
 ##
-par(mfrow=oldpar$mfrow,mar=oldpar$mar,oma=oldpar$oma,ps=oldpar$ps)
+par(mfrow=oldpar$mfrow)
 ##
 ## verify PNG file exists and indicate its file.info()
 print(file.exists(myPNGfile))
 #> [1] TRUE
 print(file.info(myPNGfile))
 #>           size isdir mode               mtime               ctime               atime exe
-#> plot4.png 6655 FALSE  666 2015-03-04 14:57:18 2015-03-03 21:31:06 2015-03-03 21:31:06  no
+#> plot4.png 7134 FALSE  666 2015-03-07 19:41:34 2015-03-03 21:31:06 2015-03-03 21:31:06  no
 ##
 ## This concludes plot#4
